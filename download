@@ -1,0 +1,15 @@
+# === Evidencia binaria — NUNCA se versiona ===
+*.exe
+*.dll
+*.scr
+*.eml
+*.pcap
+*.pcapng
+samples/
+evidence-raw/
+
+# === Sistema ===
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
