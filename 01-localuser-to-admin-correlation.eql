@@ -1,0 +1,13 @@
+// Rule 1 - Correlation: local account creation followed by escalation to Administrators
+// Tactic: Persistence (T1136.001) + Privilege Escalation (T1078.003)
+// Proposed severity: CRITICAL (risk_score 90)
+// Rationale: in the Terra case these two events alerted separately with
+// risk_score 21 (Low) and 47 (Medium). In sequence, on the same host and within
+// the same hour, they constitute a confirmed compromise.
+// Status: PROPOSAL - not validated against production telemetry.
+sequence by host.name with maxspan=1h
+  [ process where event.type == "start"
+      and process.name : "powershell.exe"
+      and process.args : "New-LocalUser" ]
+  [ iam where event.action : ("added-member-to-group", "user-member-enumerated")
+      and group.name : ("Administrators", "Administradores") ]
