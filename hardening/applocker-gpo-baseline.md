@@ -1,22 +1,22 @@
-# Baseline de Hardening — Post-incidente Caso Terra
+# Post-Incident Hardening Baseline — Terra Case
 
-Controles derivados directamente de los huecos explotados en el incidente.
-Cada control referencia la tecnica ATT&CK que neutraliza.
+Controls derived directly from the gaps exploited during the incident.
+Each control references the ATT&CK technique it neutralizes.
 
-## 1. Correo (T1566.001)
+## 1. Email (T1566.001)
 
-| Control | Implementacion | Estado |
+| Control | Implementation | Status |
 |---|---|---|
-| SPF | Registro TXT con politica `-all` (hard fail) | Pendiente |
-| DKIM | Firma de todo el correo saliente, rotacion de claves semestral | Pendiente |
-| DMARC | `p=reject; rua=mailto:dmarc@<dominio>` tras 30 dias en `p=none` | Pendiente |
-| Lookalike domains | Monitorizacion y bloqueo de dominios typosquatted (`outluok.co`) | Pendiente |
-| Banner externo | Aviso visible en todo correo procedente de fuera de la organizacion | Pendiente |
+| SPF | TXT record with `-all` (hard fail) policy | Pending |
+| DKIM | Sign all outbound mail, rotate keys every six months | Pending |
+| DMARC | `p=reject; rua=mailto:dmarc@<domain>` after 30 days at `p=none` | Pending |
+| Lookalike domains | Monitor and block typosquatted domains (`outluok.co`) | Pending |
+| External banner | Visible warning on every message originating outside the organization | Pending |
 
 ## 2. Endpoint — AppLocker / WDAC (T1204.002, T1059.001)
 
-Reglas `Deny` para el grupo `Everyone`, con excepcion explicita para
-administradores y rutas firmadas:
+`Deny` rules for the `Everyone` group, with explicit exceptions for
+administrators and signed paths:
 
 ```
 %OSDRIVE%\Users\*\AppData\Local\Temp\*
@@ -25,49 +25,49 @@ administradores y rutas firmadas:
 %OSDRIVE%\$Recycle.Bin\*
 ```
 
-Bloqueo adicional por hash y por nombre de herramientas de doble uso:
+Additional blocking by hash and by name for dual-use tooling:
 
-| Herramienta | Hash conocido |
+| Tool | Known hash |
 |---|---|
 | `nc.exe` | `b3b207dfab2f429cc352ba125be32a0cae69fe4bf8563ab7d0128bba8c57a71c` |
-| `ncat.exe`, `psexec.exe`, `nmap.exe` | Bloqueo por nombre de publicador |
+| `ncat.exe`, `psexec.exe`, `nmap.exe` | Block by publisher name |
 
-> Desplegar primero en modo **Audit Only** durante 2-4 semanas para inventariar
-> el software legitimo que se ejecuta desde esas rutas. Pasar a Enforce despues.
+> Deploy in **Audit Only** mode for 2–4 weeks first, to inventory the legitimate
+> software that runs from those paths. Switch to Enforce afterwards.
 
-## 3. Extensiones de archivo (T1036.003)
+## 3. File Extensions (T1036.003)
 
 `Computer Configuration -> Policies -> Administrative Templates -> Windows Components -> File Explorer`
 
-Desactivar *"Ocultar las extensiones de archivo para tipos de archivo conocidos"*.
-Control de coste cero que neutraliza directamente la doble extension `.pdf.exe`.
+Disable *"Hide extensions for known file types"*. A zero-cost control that
+directly neutralizes the `.pdf.exe` double extension.
 
-## 4. Firewall gestionado por GPO (T1562.001)
+## 4. GPO-Managed Firewall (T1562.001)
 
 `Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Windows Defender Firewall with Advanced Security`
 
-- Perfiles Domain, Private y Public forzados a **On**.
-- El usuario local no puede modificarlos; la politica se reimpone en cada refresco de GPO.
-- Alerta en el SIEM ante cualquier intento de cambio (ver `detections/04-*.eql`).
+- Domain, Private and Public profiles forced to **On**.
+- Local users cannot modify them; the policy is reasserted on every GPO refresh.
+- SIEM alert on any modification attempt (see `detections/04-*.eql`).
 
 ## 5. PowerShell (T1059.001)
 
-| Control | Detalle |
+| Control | Detail |
 |---|---|
-| Constrained Language Mode | Aplicado a usuarios estandar via AppLocker |
-| Script Block Logging | Event ID **4104** — habilitado y enviado al SIEM |
+| Constrained Language Mode | Applied to standard users via AppLocker |
+| Script Block Logging | Event ID **4104** — enabled and forwarded to the SIEM |
 | Module Logging | Event ID **4103** |
-| Transcription | Salida a share centralizado de solo escritura |
-| ExecutionPolicy | `AllSigned` (no es control de seguridad por si solo, pero eleva el coste) |
+| Transcription | Output to a centralized write-only share |
+| ExecutionPolicy | `AllSigned` (not a security boundary on its own, but raises attacker cost) |
 
-## 6. Identidad (T1136.001, T1078.003)
+## 6. Identity (T1136.001, T1078.003)
 
-- Alerta inmediata ante creacion de cuentas locales en endpoints (`detections/01-*.eql`).
-- Revision periodica de miembros del grupo `Administrators` en todos los hosts.
-- LAPS o equivalente para la cuenta de administrador local.
+- Immediate alert on local account creation across endpoints (`detections/01-*.eql`).
+- Periodic review of `Administrators` group membership on every host.
+- LAPS or equivalent for the local administrator account.
 
-## 7. Concienciacion
+## 7. Awareness
 
-Simulacros de phishing trimestrales centrados en los dos vectores que
-funcionaron en este incidente: **urgencia artificial** y **doble extension**.
-Metrica objetivo: tasa de clic por debajo del 5% y tasa de reporte por encima del 60%.
+Quarterly phishing simulations focused on the two vectors that worked in this
+incident: **artificial urgency** and **double extensions**.
+Target metrics: click rate below 5%, report rate above 60%.
