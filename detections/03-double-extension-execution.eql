@@ -1,0 +1,11 @@
+// Rule 3 - Execution of a double-extension binary from user-writable paths
+// Tactic: Defense Evasion (T1036.003) / Execution (T1204.002)
+// Proposed severity: HIGH (risk_score 73)
+// Status: PROPOSAL - highest false-positive risk of the set. Tune the regex
+// against a real software inventory before enforcing.
+process where event.type == "start"
+  and process.executable : (
+        "C:\\Users\\*\\Downloads\\*",
+        "C:\\Users\\*\\AppData\\Local\\Temp\\*",
+        "C:\\$Recycle.Bin\\*")
+  and process.name regex~ """.*\.(pdf|doc|docx|xls|xlsx|jpg|png|txt|zip)\.(exe|scr|bat|cmd|js)"""

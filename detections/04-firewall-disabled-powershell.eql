@@ -1,0 +1,9 @@
+// Rule 4 - Windows Firewall disabled via PowerShell or netsh
+// Tactic: Defense Evasion (T1562.001)
+// Proposed severity: HIGH (risk_score 73)
+// Twofold impact: loss of local filtering AND loss of block-log telemetry.
+// Status: PROPOSAL - not validated against production telemetry.
+process where event.type == "start"
+  and process.name : ("powershell.exe", "pwsh.exe", "netsh.exe")
+  and process.args : ("Set-NetFirewallProfile", "advfirewall")
+  and process.args : ("False", "off", "disable")

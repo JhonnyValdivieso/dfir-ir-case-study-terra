@@ -1,0 +1,13 @@
+// Rule 5 - Run/RunOnce key written by an untrusted process
+// Tactic: Persistence (T1547.001)
+// Proposed severity: HIGH (risk_score 73)
+// Status: PROPOSAL - not validated against production telemetry.
+registry where event.type == "change"
+  and registry.path : (
+        "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\*",
+        "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\*",
+        "HKEY_USERS\\*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\*")
+  and not process.executable : (
+        "C:\\Windows\\System32\\*",
+        "C:\\Program Files\\*",
+        "C:\\Program Files (x86)\\*")

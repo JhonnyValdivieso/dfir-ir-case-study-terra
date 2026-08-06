@@ -1,0 +1,9 @@
+// Rule 2 - Netcat with process redirection (reverse shell)
+// Tactic: Execution (T1059.001) / Command and Control (T1095)
+// Proposed severity: CRITICAL (risk_score 99)
+// The -e flag redirects a process's stdin/stdout/stderr to the socket: there is
+// no legitimate use case for it on a corporate endpoint.
+// Status: PROPOSAL - not validated against production telemetry.
+process where event.type == "start"
+  and process.name : ("nc.exe", "ncat.exe", "netcat.exe", "nc64.exe")
+  and process.args : ("-e", "-c", "--exec")

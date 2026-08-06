@@ -1,0 +1,8 @@
+// Rule 6 - Executable written into the Recycle Bin
+// Tactic: Defense Evasion / Initial Access (T1566.001)
+// Proposed severity: HIGH (risk_score 73)
+// $Recycle.Bin is a hidden system folder: common staging area, rarely inspected.
+// Status: PROPOSAL - not validated against production telemetry.
+file where event.type : ("creation", "change")
+  and file.path : "C:\\$Recycle.Bin\\*"
+  and file.extension : ("exe", "dll", "scr", "ps1", "bat", "cmd")
